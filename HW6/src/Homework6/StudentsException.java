@@ -8,6 +8,8 @@ package Homework6;
 import java.util.ArrayList;
 import java.util.List;
 import cputils.FileUtils;
+import cputils.FileUtilsExceptionsThrown;
+import java.io.FileNotFoundException;
 
 /**
  *
@@ -137,6 +139,9 @@ public class StudentsException extends javax.swing.JFrame {
     private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
         txtAreaDuplicates.setText(null);
         String file = "students.csv";
+        String fileNameUnique = "uniqueStudents.csv";
+        String fileNameDup = "duplicates.csv";
+        String fileNameInvalid = "invalidEntries.csv";
         String[] data = FileUtils.readIntoArray(file);
         txtFileName.setText(file);
         for (int i = 0; i < data.length; i++) {
@@ -154,12 +159,25 @@ public class StudentsException extends javax.swing.JFrame {
 
             } catch (StudentException ex) {
                 txtAreaInvalidLines.append(ex.getMessage());
-
+                
             }
         }
         txtAreaStudents.append("\n" + " Number of students: " + Students.size());
         txtAreaDuplicates.append("\n" + " Number of duplicates: " + Duplicates.size());
         txtAreaInvalidLines.append("\n" + "Number of invalid students : " + txtAreaInvalidLines.getColumns());
+        
+        List<String> uniqueStu = new ArrayList<>();
+        uniqueStu.add(txtAreaStudents.getText());
+        List<String> duplicatesStu = new ArrayList<>();
+        duplicatesStu.add(txtAreaDuplicates.getText());
+        List<String> invalidEnt = new ArrayList<>();
+        invalidEnt.add(txtAreaInvalidLines.getText());
+        try {
+            FileUtilsExceptionsThrown.writeListToFile(uniqueStu, fileNameUnique);
+            FileUtilsExceptionsThrown.writeListToFile(duplicatesStu, fileNameDup);
+            FileUtilsExceptionsThrown.writeListToFile(invalidEnt, fileNameInvalid);
+        } catch (FileNotFoundException ex) {
+        }
     }//GEN-LAST:event_btnLoadActionPerformed
 
     /**

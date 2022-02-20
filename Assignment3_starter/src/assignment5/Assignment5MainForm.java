@@ -1,7 +1,6 @@
 package assignment5;
 
 import cputils.FileUtilsExceptionsThrown;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -9,7 +8,6 @@ import javax.swing.JOptionPane;
 public class Assignment5MainForm extends javax.swing.JFrame {
 
     List<String> badLines;
-    String filename = "badrecords.txt";
 
     public Assignment5MainForm() {
         initComponents();
@@ -85,12 +83,13 @@ public class Assignment5MainForm extends javax.swing.JFrame {
         try {
             List<String> data = null;
             String fileName = txtInputFile.getText();
+            String file = "badrecords.txt";
             data = FileUtilsExceptionsThrown.readIntoList(fileName);
 
             txtOutput.append(createWeatherHistory(data).format() + "\n");
-
+            
             badLines.add(System.err.toString());
-            FileUtilsExceptionsThrown.writeListToFile(badLines, filename);
+            FileUtilsExceptionsThrown.writeListToFile(badLines, file);
 
         } catch (Exception fnf) {
             JOptionPane.showMessageDialog(this, fnf.getMessage(), "File Not Found", JOptionPane.ERROR_MESSAGE);
@@ -126,6 +125,7 @@ public class Assignment5MainForm extends javax.swing.JFrame {
                 System.err.format("LINE: " + (i + 1) + " | SOURCE: " + data.get(i) + "| ERROR: " + ex + "\n");
             }
         }
+        
         res = new WeatherHistory(loc, dailyTemp);
 
         return res;
