@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import cputils.FileUtilsExceptionsThrown;
 import java.io.FileNotFoundException;
+import javax.swing.JOptionPane;
 
 public class MainForm extends javax.swing.JFrame implements ActionListener {
 
@@ -357,8 +358,12 @@ private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
 
     if (report.equals(Common.SUMMARY_FLIGHT_TYPE)) {
         reportSummaryByFlightType();
-    } else if (report.equals(Common.SUMMARY_DESTINATION)) {
+    }
+    else if (report.equals(Common.SUMMARY_DESTINATION)) {
         reportSummaryByDestination();
+    }
+    else if (report.equals(Common.POLICY_ERRORS)){
+        reportPolicyErrors();
     }
 
 }//GEN-LAST:event_btnReportActionPerformed
@@ -376,11 +381,48 @@ private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     }//GEN-LAST:event_btnAllFlightsArchiveFormatActionPerformed
 
     private void reportSummaryByFlightType() {
-        txtOutput.setText("");
+        Flight[] passenger = schedule.getFlightsByType(Common.PASSENGER);
+        Flight[] cargo = schedule.getFlightsByType(Common.CARGO);
+        Flight[] training = schedule.getFlightsByType(Common.TRAINING);
+        
+        int cargoWeight = findTotalWeight(cargo);
+        int passengerWeight = findTotalWeight(passenger);
+        int trainingWeight = findTotalWeight(training);
+        int allFlightsWeight = findTotalWeight(schedule.getAllFlights());
+        
+        
+        txtOutput.setText("Summary of Flights by Type:\n\n ");
+        txtOutput.append(cargo.length + " Cargo Flights\t" + "Weight = " +Common.format(cargoWeight) + "\n ");
+        txtOutput.append(passenger.length + " Passenger Flights\t" + "Weight = " +Common.format(passengerWeight) + "\n ");
+        txtOutput.append(training.length + " Training Flights\t" + "Weight = " +Common.format(trainingWeight) + "\n");
+        txtOutput.append("__________________________________________\n");
+        txtOutput.append(schedule.getAllFlights().length + " Flights\t\t" + "Weight = " + Common.format(allFlightsWeight));
     }
 
     private void reportSummaryByDestination() {
-        txtOutput.setText("");
+        txtOutput.setText("Summary of Flights by destination:\n\n");
+        
+        for (Location location : locations) {
+            Flight[] locationFlights = schedule.getFlightsByDestination(location.getLocationCode());
+            if (locationFlights.length > 0) {
+                txtOutput.append("  " + locationFlights.length + " flights to " + location.getLocationCode()
+                    + "     \tWeight = " + Common.format(findTotalWeight(locationFlights)) + "\n"); 
+            }
+        }
+        txtOutput.append("_________________________________________________\n");
+        txtOutput.append(schedule.getAllFlights().length + " Flights\t\tWeight = " + Common.format(findTotalWeight(schedule.getAllFlights()))); 
+    }
+    
+    private void reportPolicyErrors(){
+        Flight[] currentFlights = schedule.getAllFlights();
+        String[] policyChecks = ErrorReporter.runPolicyChecks(currentFlights);
+        txtOutput.setText("Policy Errors \n");
+        
+        for (int i = 0; i < policyChecks.length; i++) {
+            if (!policyChecks[i].contains(Common.NO_ERROR)) {
+                txtOutput.append("\n" + currentFlights[i].toArchiveFormat() + "\n" + policyChecks[i] + "\n");
+            }
+        }
     }
 
     private void outputFlightsInArchiveFormat(Flight[] flights) {
@@ -416,43 +458,42 @@ private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
      * @return an array of Flight objects
      */
     private Flight[] createFlights(String fileName) {
-        Flight[] res = null;
-
+        
         try {
             String[] data = FileUtilsExceptionsThrown.readIntoArray(fileName);
-            res = new Flight[data.length];
+            Flight[] flights = new Flight[data.length];
+            
             for (int i = 0; i < data.length; i++) {
-                String temp = data[i];
-                String[] pieces = temp.split(",");
-                String flightType = pieces[0];
-                String flightNumber = pieces[1];
-                String dayOfWeek = pieces[2];
-                int departureTime = Integer.parseInt(pieces[3]);
-                String locationCode = pieces[4];
-                int numCrew = Integer.parseInt(pieces[5]);
+                String[] details = data[i].split(",");
                 
-                res[i] = new Flight(flightNumber,
-                        dayOfWeek,
-                        departureTime,
-                        findLocation(locationCode),
-                        numCrew) {
-                    @Override
-                    public String getFlightType() {
-                        return flightType;
-                    }
-                };
-                if (flightType.equalsIgnoreCase(Common.CARGO)) {
-                    int cargoWeight = Integer.parseInt(pieces[6]);                    
-                }
-                if (flightType.equalsIgnoreCase(Common.PASSENGER)) {
-                    int numPassengers = Integer.parseInt(pieces[6]);
+                String type = details[0];
+                String flightNumber = details[1];
+                String dayOfWeek = details[2];
+                int departureTime = Integer.parseInt(details[3]);
+                Location location = findLocation(details[4]);
+                int crewNum = Integer.parseInt(details[5]);
+                
+                switch (type) {
+                    case Common.CARGO:
+                        int cargo = Integer.parseInt(details[6]);
+                        flights[i] = new CargoFlight(cargo, flightNumber, dayOfWeek, departureTime, location, cargo);
+                        break;
+                    case Common.PASSENGER:
+                        int passengers = Integer.parseInt(details[6]);
+                        flights[i] = new PassengerFlight(passengers, flightNumber, dayOfWeek, departureTime, location, crewNum);
+                        break;
+                    default:
+                        flights[i] = new TrainingFlight(flightNumber, dayOfWeek, departureTime, location, crewNum);
+                        break;
                 }
             }
-        } catch (FileNotFoundException ex) {
-            res = new Flight[0];
-        }
-        txtOutput.append("Number of flights: " + res.length);
-        return res;
+            return flights;
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error Reading File", JOptionPane.ERROR);
+        } 
+        return null;  
+        
     }
 
     /**

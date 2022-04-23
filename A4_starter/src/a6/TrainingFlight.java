@@ -7,13 +7,18 @@ public class TrainingFlight extends Flight {
     }
 
     @Override
+    public String toArchiveFormat() {
+        return this.getFlightType() + super.toArchiveFormat(); 
+    }
+    
+    @Override
     public String getFlightType() {
         return Common.TRAINING;
     }
 
     @Override
     public String toDisplayFormat() {
-        return super.toDisplayFormat();
+        return this.getFlightType() + super.toDisplayFormat() + "Total Weight: " + super.calculateWeight() + "\n";
     }
 
 

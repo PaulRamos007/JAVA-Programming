@@ -9,10 +9,6 @@ public class PassengerFlight extends Flight {
         this.numPassengers = numPassengers;
     }
 
-    public int getNumPassengers() {
-        return numPassengers;
-    }
-
     @Override
     public String getFlightType() {
         return Common.PASSENGER;
@@ -20,29 +16,18 @@ public class PassengerFlight extends Flight {
 
     @Override
     public String toArchiveFormat() {
-        return getFlightType() + ","
-                + getFlightNumber() + ","
-                + getDayOfWeek() + ","
-                + getDepartureTime() + ","
-                + getDestination().getLocationCode() + ","
-                + getNumCrew() + ","
-                + getNumPassengers();
+        return this.getFlightType() + super.toArchiveFormat() + "," + this.numPassengers; 
     }
 
     @Override
     public String toDisplayFormat() {
-        return getFlightType() + " Flight = " + getFlightNumber() + ","
-                + " Day = " + getDayOfWeek()
-                + " Time = " + getDepartureTime()
-                + "\n Destination: " + getDestination().toDisplayFormat()
-                + "\n Number of Crew: " + getNumCrew()
-                + "\n Number of Passengers: " + getNumPassengers()
-                + "\n Total Weight: " + calculateWeight();
+        return this.getFlightType() + super.toDisplayFormat() + "Passengers: "
+                + this.numPassengers + "\n\tTotal Weight: " + this.calculateWeight() + "\n";
     }
 
     @Override
     public int calculateWeight() {
-        return super.calculateWeight() + (getNumPassengers() * Common.AVERAGE_PERSON_WEIGHT);
+        return super.calculateWeight() + (this.numPassengers * Common.AVERAGE_PERSON_WEIGHT);
     }
 
 } // end class PassengerFlight

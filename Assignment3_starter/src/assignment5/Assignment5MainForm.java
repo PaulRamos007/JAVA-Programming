@@ -3,11 +3,12 @@ package assignment5;
 import cputils.FileUtilsExceptionsThrown;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 public class Assignment5MainForm extends javax.swing.JFrame {
 
-    List<String> badLines;
+    private List<String> errorList = new ArrayList<>();
 
     public Assignment5MainForm() {
         initComponents();
@@ -79,17 +80,24 @@ public class Assignment5MainForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
-
+        JFrame f = new JFrame();
         try {
-            List<String> data = null;
             String fileName = txtInputFile.getText();
-            String file = "badrecords.txt";
-            data = FileUtilsExceptionsThrown.readIntoList(fileName);
+            List<String> lines = new ArrayList<>();
 
-            txtOutput.append(createWeatherHistory(data).format() + "\n");
-            
-            badLines.add(System.err.toString());
-            FileUtilsExceptionsThrown.writeListToFile(badLines, file);
+             lines = FileUtilsExceptionsThrown.readIntoList(fileName);
+
+            txtOutput.setText(createWeatherHistory(lines).format());
+
+            if (errorList.size() > 0) {
+                int answer = JOptionPane.showConfirmDialog(f, "Would you like to save the errors messages?",
+                        "Save Error Messages", JOptionPane.YES_NO_OPTION);
+
+                if (answer == JOptionPane.YES_OPTION) {
+                    String errorFileName = JOptionPane.showInputDialog(f, "Please, provide the file name: ", "Erros File Name");
+                    FileUtilsExceptionsThrown.writeListToFile(errorList, errorFileName);
+                }
+            }
 
         } catch (Exception fnf) {
             JOptionPane.showMessageDialog(this, fnf.getMessage(), "File Not Found", JOptionPane.ERROR_MESSAGE);
@@ -116,19 +124,28 @@ public class Assignment5MainForm extends javax.swing.JFrame {
                 dailyTemp.add(dt);
 
             } catch (NumberFormatException ex) {
-                System.err.format("LINE: " + (i + 1) + " | SOURCE: " + data.get(i) + "| ERROR: " + ex + "\n");
+                CreateErrorMessages(i, data, ex);
             } catch (ArrayIndexOutOfBoundsException ex) {
-                System.err.format("LINE: " + (i + 1) + " | SOURCE: " + data.get(i) + "| ERROR: " + ex + "\n");
+                CreateErrorMessages(i, data, ex);
             } catch (SimpleDateException ex) {
-                System.err.format("LINE: " + (i + 1) + " | SOURCE: " + data.get(i) + "| ERROR: " + ex + "\n");
+                CreateErrorMessages(i, data, ex);
             } catch (TemperatureException ex) {
-                System.err.format("LINE: " + (i + 1) + " | SOURCE: " + data.get(i) + "| ERROR: " + ex + "\n");
+                CreateErrorMessages(i, data, ex);
             }
         }
-        
+
         res = new WeatherHistory(loc, dailyTemp);
 
         return res;
+    }
+
+    public void CreateErrorMessages(int i, List<String> data, Exception ex) {
+        String message = "LINE: " + (i + 1) + " | SOURCE: " + data.get(i) + " | ERROR: "
+                + ex.toString();
+
+        System.err.format(message + "\n");
+
+        errorList.add(message);
     }
 
     /**

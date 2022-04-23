@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Order Items Summary</title>
+
+        <link rel="stylesheet" href="mainStyleSheet.css">
+        <script src="main.js"></script>
+    </head>
+    <body>
+        <h1>Order Items</h1>
+
+        <button id="GetButton">Get Data</button>
+        <br>
+        <button id="AddButton">Add</button>
+        <button id="DeleteButton" disabled>Delete</button>
+        <button id="UpdateButton" disabled>Update</button>
+
+        <div id="AddUpdatePanel">
+
+            <div>
+                <div class="formLabel">ID</div><input id="orderIdInput" type="number">
+            </div>
+            <div>
+                <div class="formLabel">Status</div>
+                <select id="statusSelect">
+                    
+                </select>
+            </div>
+            <div>
+                <div class="formLabel">Name</div><input id="nameInput" type="text">
+            </div>
+            <div>
+                <div class="formLabel">Price</div><input id="priceInput" type="number">
+            </div>
+            <div>
+                <div class="formLabel">Quantity</div><input id="quantityInput" type="number">
+            </div>
+            <div>
+                <div class="formLabel">Premium</div><input id="premiumInput" type="checkbox">
+            </div>
+            <div>
+                <button id="DoneButton">Done</button>
+                <button id="CancelButton">Cancel</button>
+            </div>
+        </div>
+
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Status</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Premium?</th>
+            </tr>
+        </table>
+
+    </body>
+</html>

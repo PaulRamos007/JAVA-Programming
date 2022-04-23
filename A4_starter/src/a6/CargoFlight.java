@@ -9,10 +9,6 @@ public class CargoFlight extends Flight {
         this.cargoWeight = cargoWeight;
     }
 
-    public int getCargoWeight() {
-        return cargoWeight;
-    }
-
     @Override
     public String getFlightType() {
         return Common.CARGO;
@@ -20,23 +16,19 @@ public class CargoFlight extends Flight {
 
     @Override
     public String toArchiveFormat() {
-        return super.toArchiveFormat();
+        return this.getFlightType() + super.toArchiveFormat() + "," + this.cargoWeight;
     }
 
     @Override
     public String toDisplayFormat() {
-        return getFlightType() + " Flight = " + getFlightNumber() + ","
-                + " Day = " + getDayOfWeek()
-                + " Time = " + getDepartureTime()
-                + "\n Destination: " + getDestination().toDisplayFormat()
-                + "\n Number of Crew: " + getNumCrew()
-                + "\n Cargo Weight: " + getCargoWeight()
-                + "\n Total Weight: " + calculateWeight();
+        return this.getFlightType() + super.toDisplayFormat() 
+                + "Cargo Weight: " + this.cargoWeight + "\n\tTotal Weight: "
+                + this.calculateWeight() + "\n";
     }
 
     @Override
     public int calculateWeight() {
-        return super.calculateWeight() + getCargoWeight();
+        return super.calculateWeight() + this.cargoWeight;
     }
 
 } // end class CargoFlight

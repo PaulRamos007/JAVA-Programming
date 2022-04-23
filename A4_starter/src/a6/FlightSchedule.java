@@ -23,20 +23,57 @@ public class FlightSchedule {
     }
 
     public Flight[] getFlightsByDestination(String locationCode) {
-        return new Flight[0];
+        Flight[] res = new Flight[countFlightsByDestination(locationCode)];
+        int counter = 0;
+
+        for (Flight flight : this.flights) {
+            String location = flight.getDestination().getLocationCode();
+            if (locationCode.equalsIgnoreCase(location)) {
+                res[counter] = flight;
+                counter++;
+            }
+        }
+        return res;
     }
 
     private int countFlightsByDestination(String locationCode) {
-        return -1;
+        int res = 0;
+        
+        for (Flight flight : this.flights) {
+            String location = flight.getDestination().getLocationCode();
+            
+            if (locationCode.equalsIgnoreCase(location)) {
+                res ++;
+            }
+        }
+        return res;
     }
 
     public Flight[] getFlightsByType(String flightType) {
-        return new Flight[0];
+        Flight[] res = new Flight[countFlightsByType(flightType)];
+        int counter = 0;
+        
+        for (Flight flight : this.flights) {
+            String type = flight.getFlightType();
+            if (flightType.equalsIgnoreCase(type)) {
+                res[counter] = flight;
+                counter++;
+            }
+        }
+        return res;
     }
 
     private int countFlightsByType(String flightType) {
-        return -1;
+        int res = 0;
+        
+        for (Flight flight : this.flights) {
+            String type = flight.getFlightType();
+            
+            if (flightType.equalsIgnoreCase(type)) {
+                res ++;
+            }
+        }
+        return res;
     }
-
 
 } // end class FlightSchedule

@@ -15,7 +15,7 @@ import javax.sql.rowset.RowSetProvider;
  *
  * @author paula
  */
-public class CachedRowset {
+public class CachedRowsetItem {
     public static void main(String[] args) throws SQLException {
         try(CachedRowSet row = RowSetProvider.newFactory().createCachedRowSet()){
             row.setUrl("jdbc:mysql://localhost:3306/bookstoredb"); 

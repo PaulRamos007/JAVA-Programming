@@ -1,0 +1,106 @@
+.loginpage {
+    background-image: url(./img/onlineorders.jpeg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-family: 'Arimo', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    box-sizing: border-box;
+    font-size: 0.775em;
+}
+
+.container {
+    width: 80%;
+    height: 100%;
+    margin: 0 auto;
+}
+
+table {
+    border:solid thin gray;
+    border-collapse:collapse;
+    margin-left:auto;
+    margin-right:auto;
+    width:70%;
+}
+
+h1 {
+    text-align:center;
+}
+
+td,th {
+    border:solid thin gray;
+    border-collapse:collapse;
+    padding:10px;
+}
+
+th {
+    text-align:left;
+    background-color:#191970;
+    color:#FFF;
+}
+
+tr:hover {
+    background-color:#ADD8E6;
+}
+
+.addbtn {
+    background-color:#90EE90;
+    margin-left:10%;
+    margin-bottom:25px;
+    font-size:14px;
+    font-weight:700;
+}
+
+.delbtn {
+    background-color:#F08080;
+}
+
+.updbtn {
+    background-color:#87CEFA;
+}
+
+.addform {
+    box-sizing: border-box;
+    margin-left: 30%;
+    width: 40%;
+}
+
+label {
+    position:absolute;
+}
+
+#txt {
+    margin-left:7em;
+}
+
+.regbox{
+    width: 350px;
+    height: 610px;
+    background: #2f3542;
+    margin: 0;
+    padding: 30px;
+    top: 50%;
+    left: 75%;
+    color: #fff;
+    border-radius: 15px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+}
+
+.logbox{
+    width: 350px;
+    height: 420px;
+    background: lightblue;
+    margin: 0;
+    padding: 30px;
+    top: 45%;
+    left: 75%;
+    color: #fff;
+    border-radius: 15px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    filter: drop-shadow(0px 15px 50px rgba(0, 0, 0, 0.3));
+}

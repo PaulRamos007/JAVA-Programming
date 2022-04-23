@@ -21,7 +21,7 @@ public abstract class Flight implements PolicyRules {
     }
 
     public String getDayOfWeek() {
-        return dayOfWeek;
+        return this.dayOfWeek;
     }
 
     public int getDepartureTime() {
@@ -37,48 +37,43 @@ public abstract class Flight implements PolicyRules {
     }
 
     public int calculateWeight() {
-        return numCrew * Common.AVERAGE_PERSON_WEIGHT;
+        return this.numCrew * Common.AVERAGE_PERSON_WEIGHT;
     }
 
     public String toDisplayFormat() {
-        return getFlightType() + " Flight = " + getFlightNumber() + ","
-                + " Day = " + getDayOfWeek()
-                + " Time = " + getDepartureTime()
-                + "\n Destination: " + getDestination().toDisplayFormat()
-                + "\n Number of Crew: " + getNumCrew()
-                + "\n Total Weight: " + calculateWeight();
+        return " Flight = " + this.flightNumber + ","
+                + this.destination.getLocationCode() + "("
+                + this.destination.getCity() + ", " 
+                + this.destination.getCountry() + "), Region " 
+                + this.destination.getRegion() + "\n\t"
+                + "Number of Crew: " + this.numCrew + "\n\t";
     }
 
     public String toArchiveFormat() {
-        return getFlightType() + ","
-                + getFlightNumber() + ","
-                + getDayOfWeek() + ","
-                + getDepartureTime() + ","
-                + getDestination().getLocationCode() + ","
-                + getNumCrew() + ","
-                + calculateWeight();
+        return "," + this.flightNumber + "," + this.dayOfWeek + "," + this.departureTime + "," 
+                + this.destination.getLocationCode() + "," + this.numCrew;
     }
 
     public abstract String getFlightType();
 
     @Override
     public boolean checkCrew() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.getNumCrew() > Common.MINIMUM_CREW;
     }
 
     @Override
     public boolean checkPassengers() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return true;
     }
 
     @Override
     public boolean checkTime() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return true;
     }
 
     @Override
     public boolean checkWeight() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.calculateWeight() < Common.MAXIMUM_WEIGHT;
     }
 
 } // end class Flight
